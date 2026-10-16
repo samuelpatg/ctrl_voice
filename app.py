@@ -11,19 +11,14 @@ from bokeh.models import CustomJS
 from streamlit_bokeh_events import streamlit_bokeh_events
 from PIL import Image
  
-# ──────────────────────────────────────────────
-# Configuración de página
-# ──────────────────────────────────────────────
+
 st.set_page_config(
     page_title="Control por Voz",
     page_icon="🎙️",
     layout="centered",
 )
  
-# ──────────────────────────────────────────────
-# Comandos que entiende el ESP32 (Wokwi)
-# "payload" es EXACTAMENTE el texto que compara el ESP32.
-# ──────────────────────────────────────────────
+
 COMMANDS = {
     "luz_on": {
         "emoji": "💡",
@@ -58,7 +53,7 @@ COMMANDS = {
  
  
 def normalize(text: str) -> str:
-    """Minúsculas, sin tildes ni signos, para comparar lo que escuchó el navegador."""
+  
     text = unicodedata.normalize("NFD", text.lower())
     text = "".join(c for c in text if unicodedata.category(c) != "Mn")
     text = re.sub(r"[^a-z0-9 ]", " ", text)
@@ -171,9 +166,7 @@ port = 1883
 client1 = paho.Client("GIT-HUBC")
 client1.on_message = on_message
  
-# ──────────────────────────────────────────────
-# Encabezado
-# ──────────────────────────────────────────────
+
 st.markdown(
     """
 <div class="hero">
@@ -187,13 +180,11 @@ st.markdown(
 col_a, col_b, col_c = st.columns([1, 1, 1])
 with col_b:
     try:
-        st.image(Image.open("voice_ctrl.jpg"), width=160)
+        st.image(Image.open("bombi.jpg"), width=160)
     except Exception:
         st.markdown("<div style='text-align:center;font-size:4rem'>🎤</div>", unsafe_allow_html=True)
  
-# ──────────────────────────────────────────────
-# Botón de voz
-# ──────────────────────────────────────────────
+
 st.markdown('<div class="section-title">🎧 TOCA EL BOTÓN Y HABLA</div>', unsafe_allow_html=True)
  
 stt_button = Button(label="🎙️  Iniciar escucha", width=220, button_type="primary")
@@ -227,9 +218,7 @@ result = streamlit_bokeh_events(
     debounce_time=0,
 )
  
-# ──────────────────────────────────────────────
-# Procesar lo escuchado
-# ──────────────────────────────────────────────
+
 heard_text = None
 active_key = None
 unrecognized = False
@@ -265,10 +254,7 @@ if result and "GET_TEXT" in result:
         os.mkdir("temp")
     except Exception:
         pass
- 
-# ──────────────────────────────────────────────
-# Lo que se escuchó
-# ──────────────────────────────────────────────
+
 if heard_text:
     if active_key:
         cmd = COMMANDS[active_key]
@@ -284,9 +270,7 @@ if heard_text:
             unsafe_allow_html=True,
         )
  
-# ──────────────────────────────────────────────
-# Estado de los dispositivos
-# ──────────────────────────────────────────────
+
 def estado(valor, on_txt, off_txt, on_emoji, off_emoji):
     if valor is None:
         return "⚪", "Sin datos"
@@ -307,9 +291,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
  
-# ──────────────────────────────────────────────
-# Comandos disponibles
-# ──────────────────────────────────────────────
+
 st.markdown('<div class="section-title">🗣️ COMANDOS DISPONIBLES</div>', unsafe_allow_html=True)
  
 cards = ""
